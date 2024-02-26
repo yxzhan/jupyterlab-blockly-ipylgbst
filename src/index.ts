@@ -5,6 +5,8 @@ import {
 
 import { IBlocklyRegistry } from 'jupyterlab-blockly';
 
+// import BlocklyBase from './basic_blocks_toolbox';
+import BlocklyGiskard from './giskard_blocks_and_toolbox';
 import BlocklyIpylgbst from './ipylgbst_blocks_and_toolbox';
 
 /**
@@ -19,8 +21,10 @@ const plugin: JupyterFrontEndPlugin<void> = {
       'JupyterLab extension jupyterlab-blockly-ipylgbst is activated!'
     );
 
+    // blockly.registerToolbox('default', BlocklyBase.Toolbox);
+    blockly.registerToolbox('default', BlocklyGiskard.Toolbox);
     blockly.registerToolbox('ipylgbst', BlocklyIpylgbst.Toolbox);
-    blockly.registerToolbox('ipylgbst async', BlocklyIpylgbst.Toolbox_async);
+    // blockly.registerToolbox('ipylgbst async', BlocklyIpylgbst.Toolbox_async);
   }
 };
 
