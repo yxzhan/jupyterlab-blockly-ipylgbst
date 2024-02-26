@@ -3,12 +3,13 @@ import { pythonGenerator as BlocklyPy } from 'blockly/python';
 
 import BlocklyBase from './basic_blocks_toolbox';
 
-const giskard_color = '#000000';
-var ipylgbst_color_async = '#5D3FD3';
-var vernie_color_async = '#088F8F';
-var ipylgbst_color = '#8169df';
-var vernie_color = '#40B5AD';
-
+const giskard_colors = [
+    '#418F55',
+    '#3F4545',
+    '#AD7339',
+    '#FFA42E',
+    '#FF4F4F'
+]
 
 /*
  * Block definitions
@@ -24,70 +25,151 @@ const CUSTOM_BLOCKS = [
       this.appendValueInput('ROBOT')
         .setCheck('String')
         .appendField('Start robot')
-      this.appendDummyInput()
-      this.setPreviousStatement(true, null)
+      this.setPreviousStatement(false, null)
       this.setNextStatement(true, null)
       this.setInputsInline(true)
-      this.setColour(giskard_color)
+      this.setColour(giskard_colors[0])
       this.setTooltip('Start a robot simulator.')
       this.setHelpUrl('')
     },
     // The python code generator for the block
     generator: (block) => {
-      var robot = BlocklyPy.valueToCode(block, 'ROBOT', BlocklyPy.ORDER_ATOMIC);
-      var code = [
-        `start_robot(${robot})`,
-      ].join('\n');
-      return code + '\n';
+      let robot = BlocklyPy.valueToCode(block, 'ROBOT', BlocklyPy.ORDER_ATOMIC);
+      let code = `blockly_start(${robot})\n`
+      return code;
     },
     // The python top-level code, for example import libraries
     toplevel_init: [
-      `from utils import start_robot`,
       `import rospy`,
+      `from utils import blockly_start, blockly_move, blockly_turn`,
     ].join('\n') + '\n'
   },
   {
     id: 'giskard_sleep',
     block_init: function() {
-      this.appendValueInput('TIME').setCheck('Number').appendField('Wait for');
-      this.appendDummyInput().appendField('seconds');
+      this.appendValueInput('TIME')
+        .setCheck('Number')
+        .appendField('Wait for');
+      this.appendDummyInput()
+        .appendField('seconds');
       this.setPreviousStatement(true, null);
       this.setNextStatement(true, null);
       this.setInputsInline(true);
-      this.setColour(ipylgbst_color_async);
+      this.setColour(giskard_colors[1])
       this.setTooltip('Wait for a certain amount of time.');
       this.setHelpUrl('');
     },
     generator: (block) => {
-      var value_time = BlocklyPy.valueToCode(block, 'TIME', BlocklyPy.ORDER_ATOMIC);
-      var code = `rospy.sleep(${value_time})\n`;
+      let value_time = BlocklyPy.valueToCode(block, 'TIME', BlocklyPy.ORDER_ATOMIC);
+      let code = `rospy.sleep(${value_time})\n`;
       return code;
     }
   },
   {
-    id: 'giskard_moverobot',
+    id: 'giskard_forward',
     block_init: function() {
       this.appendValueInput('SPEED')
         .setCheck('Number')
         .appendField('Move forward with speed');
-      this.appendValueInput('TIME').setCheck('Number').appendField('for');
-      this.appendDummyInput().appendField('seconds');
+      this.appendValueInput('TIME')
+        .setCheck('Number')
+        .appendField('for');
+      this.appendDummyInput()
+        .appendField('seconds');
       this.setInputsInline(true);
       this.setPreviousStatement(true, null);
       this.setNextStatement(true, null);
-      this.setColour(ipylgbst_color_async);
+      this.setColour(giskard_colors[3])
       this.setTooltip(
         'Move forward with a certain speed for a chosen no. of seconds.'
       );
       this.setHelpUrl('');
     },
     generator: (block) => {
+      let value_speed = BlocklyPy.valueToCode(block, 'SPEED', BlocklyPy.ORDER_ATOMIC);
+      let value_time = BlocklyPy.valueToCode(block, 'TIME', BlocklyPy.ORDER_ATOMIC);
+      let code = `blockly_move(${value_speed}, ${value_time})\n`;
+      return code;
+    }
+  },
+  {
+    id: 'giskard_backward',
+    block_init: function() {
+      this.appendValueInput('SPEED')
+        .setCheck('Number')
+        .appendField('Move backward with speed');
+      this.appendValueInput('TIME')
+        .setCheck('Number')
+        .appendField('for');
+      this.appendDummyInput()
+        .appendField('seconds');
+      this.setInputsInline(true);
+      this.setPreviousStatement(true, null);
+      this.setNextStatement(true, null);
+      this.setColour(giskard_colors[3])
+      this.setTooltip(
+        'Move backward with a certain speed for a chosen no. of seconds.'
+      );
+      this.setHelpUrl('');
+    },
+    generator: (block) => {
+      let value_speed = BlocklyPy.valueToCode(block, 'SPEED', BlocklyPy.ORDER_ATOMIC);
+      let value_time = BlocklyPy.valueToCode(block, 'TIME', BlocklyPy.ORDER_ATOMIC);
+      let code = `blockly_move(-${value_speed}, ${value_time})\n`;
+      return code;
+    }
+  },
+  {
+    id: 'giskard_turn_left',
+    block_init: function() {
+      this.appendValueInput('SPEED')
+        .setCheck('Number')
+        .appendField('Turn left with speed');
+      this.appendValueInput('TIME')
+        .setCheck('Number')
+        .appendField('for');
+      this.appendDummyInput().appendField('seconds');
+      this.setInputsInline(true);
+      this.setPreviousStatement(true, null);
+      this.setNextStatement(true, null);
+      this.setColour(giskard_colors[4])
+      this.setTooltip(
+        'Turn left with a certain speed for a chosen no. of seconds.'
+      );
+      this.setHelpUrl('');
+    },
+    generator: (block) => {
+      let value_speed = BlocklyPy.valueToCode(block, 'SPEED', BlocklyPy.ORDER_ATOMIC);
+      let value_time = BlocklyPy.valueToCode(block, 'TIME', BlocklyPy.ORDER_ATOMIC);
+      let code = `blockly_turn(${value_speed}, ${value_time})\n`;
+      return code;
+    }
+  },
+  {
+    id: 'giskard_turn_right',
+    block_init: function() {
+      this.appendValueInput('SPEED')
+        .setCheck('Number')
+        .appendField('Turn right with speed');
+      this.appendValueInput('TIME')
+        .setCheck('Number')
+        .appendField('for');
+      this.appendDummyInput().appendField('seconds');
+      this.setInputsInline(true);
+      this.setPreviousStatement(true, null);
+      this.setNextStatement(true, null);
+      this.setColour(giskard_colors[4])
+      this.setTooltip(
+        'Turn right with a certain speed for a chosen no. of seconds.'
+      );
+      this.setHelpUrl('');
+    },
+    generator: (block) => {
       var value_speed = BlocklyPy.valueToCode(block, 'SPEED', BlocklyPy.ORDER_ATOMIC);
       var value_time = BlocklyPy.valueToCode(block, 'TIME', BlocklyPy.ORDER_ATOMIC);
-      var code = `move_forward(${value_speed}, ${value_time})\n`;
+      var code = `blockly_turn(-${value_speed}, ${value_time})\n`;
       return code;
-    },
-    toplevel_init: `from utils import move_forward\n`
+    }
   }
 ]
 
@@ -110,7 +192,7 @@ const TOOLBOX = {
     ...BlocklyBase.Toolbox.contents,
     {
       kind: 'CATEGORY',
-      colour: giskard_color,
+      colour: giskard_colors[0],
       name: 'Robotics',
       contents: CUSTOM_BLOCKS.map(v => {
         return {
