@@ -4,11 +4,11 @@ import { pythonGenerator as BlocklyPy } from 'blockly/python';
 import BlocklyBase from './basic_blocks_toolbox';
 
 const giskard_colors = [
-    '#418F55',
-    '#3F4545',
+    '#15253e',
     '#AD7339',
+    '#418F55',
     '#FFA42E',
-    '#FF4F4F'
+    '#FF4F4F',
 ]
 
 /*
