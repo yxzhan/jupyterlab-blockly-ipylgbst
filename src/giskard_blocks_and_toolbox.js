@@ -41,8 +41,9 @@ const CUSTOM_BLOCKS = [
     // The python top-level code, for example import libraries
     toplevel_init: [
       `import rospy`,
-      `from utils import blockly_start, blockly_move, blockly_turn`,
-    ].join('\n') + '\n'
+      `from geometry_msgs.msg import PoseStamped, Point, Quaternion, Vector3Stamped, PointStamped, QuaternionStamped`,
+      `from utils import blockly_start, move_to, control_joint, blockly_move, blockly_turn`,
+    ].join('\n') + '\n\n'
   },
   {
     id: 'giskard_sleep',
@@ -165,9 +166,62 @@ const CUSTOM_BLOCKS = [
       this.setHelpUrl('');
     },
     generator: (block) => {
-      var value_speed = BlocklyPy.valueToCode(block, 'SPEED', BlocklyPy.ORDER_ATOMIC);
-      var value_time = BlocklyPy.valueToCode(block, 'TIME', BlocklyPy.ORDER_ATOMIC);
-      var code = `blockly_turn(-${value_speed}, ${value_time})\n`;
+      let value_speed = BlocklyPy.valueToCode(block, 'SPEED', BlocklyPy.ORDER_ATOMIC);
+      let value_time = BlocklyPy.valueToCode(block, 'TIME', BlocklyPy.ORDER_ATOMIC);
+      let code = `blockly_turn(-${value_speed}, ${value_time})\n`;
+      return code;
+    }
+  },
+  {
+    id: 'giskard_moveto',
+    block_init: function() {
+      this.appendValueInput('X')
+        .setCheck('Number')
+        .appendField('Move to X:');
+      this.appendValueInput('Y')
+        .setCheck('Number')
+        .appendField('Y:');
+      this.setInputsInline(false);
+      this.setPreviousStatement(true, null);
+      this.setNextStatement(true, null);
+      this.setColour(giskard_colors[2])
+      this.setTooltip(
+        'Move robot to postion (X, Y).'
+      );
+      this.setHelpUrl('');
+    },
+    generator: (block) => {
+      let value_x = BlocklyPy.valueToCode(block, 'X', BlocklyPy.ORDER_ATOMIC);
+      let value_y = BlocklyPy.valueToCode(block, 'Y', BlocklyPy.ORDER_ATOMIC);
+      let code = `move_to(Point(${value_x}, ${value_y}, 0))\n`;
+      return code;
+    }
+  },
+  {
+    id: 'giskard_head_left',
+    block_init: function() {
+      this.appendValueInput('SIDE')
+        .setCheck('String')
+        .appendField('Turn robot head to the ');
+      this.setInputsInline(true);
+      this.setPreviousStatement(true, null);
+      this.setNextStatement(true, null);
+      this.setColour(giskard_colors[2])
+      this.setTooltip(
+        'Turn robot head to the right or left.'
+      );
+      this.setHelpUrl('');
+    },
+    generator: (block) => {
+      let value_side = BlocklyPy.valueToCode(block, 'SIDE', BlocklyPy.ORDER_ATOMIC);
+      let rotate_angle = 0
+      if (value_side === "'left'") {
+        rotate_angle = 1.5
+      }
+      if (value_side === "'right'"){
+        rotate_angle = -1.5
+      }
+      let code = "control_joint({'head_pan_joint':" + rotate_angle + "})\n";
       return code;
     }
   }
