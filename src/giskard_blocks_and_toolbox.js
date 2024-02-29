@@ -1,7 +1,7 @@
 import * as Blockly from 'blockly';
 import { pythonGenerator as BlocklyPy } from 'blockly/python';
 
-import BlocklyBase from './basic_blocks_toolbox';
+import { TOOLBOX as defaultToolbox } from 'jupyterlab-blockly';
 
 const giskard_colors = [
   "#FF5733", // Orange
@@ -410,7 +410,7 @@ for (const blocks of CUSTOM_BLOCKS) {
 const TOOLBOX = {
   kind: 'categoryToolbox',
   contents: [
-    ...BlocklyBase.Toolbox.contents,
+    ...defaultToolbox.Toolbox.contents,
     {
       kind: 'CATEGORY',
       colour: giskard_colors[0],
