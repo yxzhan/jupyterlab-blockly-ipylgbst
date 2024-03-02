@@ -43,7 +43,7 @@ const CUSTOM_BLOCKS = [
     toplevel_init: [
       `import rospy`,
       `from geometry_msgs.msg import PoseStamped, Point, Quaternion, Vector3Stamped, PointStamped, QuaternionStamped`,
-      `from utils import launch_robot, move_to, get_controlled_joints, get_links, add_joint_position, add_cartesian_pose, cmd_vel_move, cmd_vel_turn`,
+      `from utils import launch_robot, move_robot, get_controlled_joints, get_links, add_joint_position, add_cartesian_pose, cmd_vel_move, cmd_vel_turn`,
     ].join('\n') + '\n\n'
   },
   {
@@ -213,7 +213,7 @@ const CUSTOM_BLOCKS = [
     },
     generator: (block) => {
       let value_pos = BlocklyPy.valueToCode(block, 'POSITION', BlocklyPy.ORDER_ATOMIC);
-      let code = `move_to(${value_pos})`;
+      let code = `move_robot(${value_pos})`;
       return code + '\n';
     }
   },
@@ -247,8 +247,8 @@ const CUSTOM_BLOCKS = [
     generator: (block) => {
       let value_tip_link = BlocklyPy.valueToCode(block, 'TIP_LINK', BlocklyPy.ORDER_ATOMIC) || "'base_link'";
       let value_root_link = BlocklyPy.valueToCode(block, 'ROOT_LINK', BlocklyPy.ORDER_ATOMIC) || "'map'";
-      let value_pos = BlocklyPy.valueToCode(block, 'POSITION', BlocklyPy.ORDER_ATOMIC) || 'Point(0, 0, 0)';
-      let value_ori = BlocklyPy.valueToCode(block, 'ORIENTATION', BlocklyPy.ORDER_ATOMIC) || 'Quaternion(0, 0, 0, 0)';
+      let value_pos = BlocklyPy.valueToCode(block, 'POSITION', BlocklyPy.ORDER_ATOMIC) || 'None';
+      let value_ori = BlocklyPy.valueToCode(block, 'ORIENTATION', BlocklyPy.ORDER_ATOMIC) || 'None';
       let code = `add_cartesian_pose(${value_pos}, ${value_ori}, root_link=${value_root_link}, tip_link=${value_tip_link})`;
       return code + '\n';
     }
@@ -300,7 +300,7 @@ const CUSTOM_BLOCKS = [
     id: 'giskard_get_controlled_joints',
     block_init: function() {
       this.appendDummyInput()
-        .appendField('Get controlled joints');
+        .appendField('Robot controlled joints');
       this.setColour(giskard_colors[3])
       this.setOutput(true, 'List');
       this.setTooltip(
@@ -317,7 +317,7 @@ const CUSTOM_BLOCKS = [
     id: 'giskard_get_links',
     block_init: function() {
       this.appendDummyInput()
-        .appendField('Get links');
+        .appendField('Robot links');
       this.setColour(giskard_colors[3])
       this.setOutput(true, 'List');
       this.setTooltip(
