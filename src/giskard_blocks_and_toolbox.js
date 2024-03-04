@@ -55,6 +55,12 @@ const CUSTOM_BLOCKS = [
       this.appendValueInput('ROBOT')
         .setCheck('String')
         .appendField('Start robot')
+      this.appendValueInput('ENV')
+        .setCheck('String')
+        .appendField('in')
+      this.appendValueInput('RESTART')
+        .setCheck('Boolean')
+        .appendField(', and always restart:')
       this.setPreviousStatement(true, null)
       this.setNextStatement(true, null)
       this.setInputsInline(true)
@@ -64,8 +70,10 @@ const CUSTOM_BLOCKS = [
     },
     // The python code generator for the block
     generator: (block) => {
-      let robot = BlocklyPy.valueToCode(block, 'ROBOT', BlocklyPy.ORDER_ATOMIC);
-      let code = `launch_robot(${robot})`
+      let value_robot = BlocklyPy.valueToCode(block, 'ROBOT', BlocklyPy.ORDER_ATOMIC);
+      let value_env = BlocklyPy.valueToCode(block, 'ENV', BlocklyPy.ORDER_ATOMIC);
+      let value_reset = BlocklyPy.valueToCode(block, 'RESTART', BlocklyPy.ORDER_ATOMIC);
+      let code = `launch_robot(${value_robot}, sim_env=${value_env}, restart=${value_reset})`
       return code + '\n';
     },
   },
@@ -98,7 +106,7 @@ const CUSTOM_BLOCKS = [
         .appendField('Move forward with speed');
       this.appendValueInput('TIME')
         .setCheck('Number')
-        .appendField('1m/s for');
+        .appendField('m/s for');
       this.appendDummyInput()
         .appendField('seconds.');
       this.setInputsInline(true);
@@ -125,7 +133,7 @@ const CUSTOM_BLOCKS = [
         .appendField('Move backward with speed');
       this.appendValueInput('TIME')
         .setCheck('Number')
-        .appendField('1m/s for');
+        .appendField('m/s for');
       this.appendDummyInput()
         .appendField('seconds.');
       this.setInputsInline(true);
